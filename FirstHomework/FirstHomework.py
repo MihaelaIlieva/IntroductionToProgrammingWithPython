@@ -9,7 +9,7 @@ def beginning(word):
                 break
             else:
                 begin+=i
-        print(begin)
+        return(begin)
     elif len(word)%3==2:
         syllable_length=len(word)//3
         begin=""
@@ -20,7 +20,7 @@ def beginning(word):
                 break
             else:
                 begin+=i
-        print(begin)
+        return(begin)
     elif len(word)%3==1:
         syllable_length=len(word)//3
         begin=""
@@ -31,14 +31,7 @@ def beginning(word):
                 break
             else:
                 begin+=i
-        print(begin)
-# beginning("шах")
-# beginning("Пайтън")
-# beginning("Враца")
-# beginning("барабани")
-# beginning("цици")
-# beginning("домашни")
-# beginning("se")
+        return(begin)
 def middle(word):
     if len(word)%3==0:
         syllable_length=len(word)/3
@@ -49,9 +42,9 @@ def middle(word):
             if counter>syllable_length:
                 if counter<=len(word)-syllable_length:
                     mid+=i
-        print(mid)
+        return(mid)
     elif len(word)%3==2:
-        syllable_length=len(word)//3 #1
+        syllable_length=len(word)//3
         mid=""
         counter=0
         for i in word:
@@ -59,9 +52,9 @@ def middle(word):
             if counter>syllable_length+1:
                 if counter<=len(word)-syllable_length-1:
                     mid+=i
-        print(mid)
+        return(mid)
     elif len(word)%3==1:
-        syllable_length=len(word)//3 #1
+        syllable_length=len(word)//3
         mid=""
         counter=0
         for i in word:
@@ -69,14 +62,7 @@ def middle(word):
             if counter>syllable_length:
                 if counter<=len(word)-syllable_length:
                     mid+=i
-        print(mid)
-# middle("шах")
-# middle("Пайтън")
-# middle("Враца")
-# middle("барабани")
-# middle("цици")
-# middle("домашни")
-# middle("se")
+        return(mid)
 def end(word):
     if len(word)%3==0:
         syllable_length=len(word)/3
@@ -86,7 +72,7 @@ def end(word):
             counter+=1
             if counter>len(word)-syllable_length:
                 fin+=i
-        print(fin)
+        return(fin)
     elif len(word)%3==2:
         syllable_length=len(word)//3
         fin=""
@@ -95,7 +81,7 @@ def end(word):
             counter+=1
             if counter>len(word)-syllable_length-1:
                 fin+=i
-        print(fin)
+        return(fin)
     elif len(word)%3==1:
         syllable_length=len(word)//3
         fin=""
@@ -104,12 +90,25 @@ def end(word):
             counter+=1
             if counter>len(word)-syllable_length:
                 fin+=i
-        print(fin)
-# end("шах")
-# end("Пайтън")
-# end("Враца")
-# end("Барабани")
-# end("цици")
-# end("домашни")
-# end("se")
-# def split_sentence(sentence):
+        return(fin)
+def split_sentence(sentence):
+    current_word=""
+    final_list_of_split_words=[]
+    #the for loop will work only for words that have space after them
+    for i in sentence:
+        if i !=" ":
+            current_word+=i
+        else:
+            current_tuple=(beginning(current_word),
+            middle(current_word),
+            end(current_word))
+            final_list_of_split_words.append(current_tuple)
+            current_word=""
+    #getting the last word of the sentence
+    index_of_last_space=sentence.rfind(" ")
+    last_tupple=(beginning(sentence[index_of_last_space+1:]),
+    middle(sentence[index_of_last_space+1:]),
+    end(sentence[index_of_last_space+1:]))
+    final_list_of_split_words.append(last_tupple)
+    return final_list_of_split_words
+print(split_sentence("Казвам се Джон Сноу"))
