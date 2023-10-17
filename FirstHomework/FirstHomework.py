@@ -1,10 +1,10 @@
-#This is the refactored code, after the course's team advice
+#This is the refactored code, after the course's team's advice
 def beginning(word):
     syllable_length = len(word)//3
     if (len(word)%3 == 0 or len(word)%3 == 1):
-        return word[0:syllable_length]
+        return word[:syllable_length]
     elif len(word)%3 == 2:
-        return word[0:syllable_length+1]
+        return word[:syllable_length+1]
 
 
 def middle(word):
