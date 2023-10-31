@@ -1,27 +1,18 @@
 def plugboard(convertable_text, encoding_pattern):
-    pattern_letters = []
+    pattern_dictionary = dict()
     new_word = ""
     for first_letter, second_letter in encoding_pattern:
-        pattern_letters.append(first_letter)
-        pattern_letters.append(second_letter)
+        pattern_dictionary[first_letter] = second_letter
+        pattern_dictionary[second_letter] = first_letter
     for letter in convertable_text:
-        if letter in pattern_letters:
-            if pattern_letters.index(letter)%2 == 0:
-                new_word += pattern_letters[pattern_letters.index(letter)+1]
-            else:
-                new_word += pattern_letters[pattern_letters.index(letter)-1]
-        else:
-            new_word += letter
+        new_word += pattern_dictionary.get(letter, letter)
     return new_word
 
 
 def rotor(convertable_text, encoding_pattern):
     new_word = ""
     for letter in convertable_text:
-        if letter != " ":
-            new_word += encoding_pattern[letter]
-        else:
-            new_word += " "
+        new_word += encoding_pattern.get(letter, " ")
     return new_word
 
 
