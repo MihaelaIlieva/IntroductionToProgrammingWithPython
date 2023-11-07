@@ -1,6 +1,7 @@
 import operator
 
-class Candy():
+class Candy:
+
     def __init__(self, mass, uranium):
         self.mass = mass
         self.uranium = uranium
@@ -12,8 +13,7 @@ class Candy():
         return self.mass
     
 
-class Person():
-    type_of_class = "person"
+class Person:
 
     def __init__(self, position):
         self.position = position
@@ -23,13 +23,11 @@ class Person():
     
     def set_position(self, new_position):
         self.position = new_position
-    
-    def get_type_of_class(self):
-        return self.type_of_class
 
 
 class Kid(Person):
-    type_of_class = "kid"
+
+    CRITICAL_MASS = 20
 
     def __init__(self, position, initiative):
         super().__init__(position)
@@ -48,11 +46,10 @@ class Kid(Person):
         self._uranium_sum = 0
         for candy in self._basket:
             self._uranium_sum += candy.get_uranium_quantity()
-        return self._uranium_sum > 20
+        return self._uranium_sum > self.CRITICAL_MASS
     
 
 class Host(Person):
-    type_of_class = "host"
     
     def __init__(self, position, candies):
         super().__init__(position)
@@ -60,6 +57,7 @@ class Host(Person):
         self.treated_kids = list()
         self.kids_to_be_treated = list()
         self.candies = candies
+
         for candy in self.candies:
             self._basket.append(Candy(candy[0], candy[1]))  
     
@@ -72,28 +70,30 @@ class Host(Person):
             return candy
         
 
-class FluxCapacitor():
+class FluxCapacitor:
+
+    def split_participants(self):
+        for participant in self.participants:
+            if type(participant) is Kid:
+                self._kids.append(participant)
+            else:
+                self._hosts.append(participant)
 
     def __init__(self, participants):
         self.participants = participants
         self.victims = set()
         self._kids = []
         self._hosts = []
-
-    def split_participants(self):
-        for participant in self.participants:
-            if participant.get_type_of_class() == "kid":
-                self._kids.append(participant)
-            else:
-                self._hosts.append(participant)
+        self.split_participants()
 
     def give_Candy(self, kid, host):
-        max_uranium_candy = 0
+        max_mass_candy = 0
         candy_to_give = Candy(0, 0)
         for candy in host._basket:
-            if candy.get_uranium_quantity() > max_uranium_candy:
-                max_uranium_candy = candy.get_uranium_quantity()
-                candy_to_give = candy       
+            if candy.get_mass() > max_mass_candy:
+                max_mass_candy = candy.get_mass()
+                candy_to_give = candy
+
         if len(host._basket) > 0:
             kid.add_candy(candy_to_give)
             host._basket.remove(candy_to_give)
@@ -102,12 +102,12 @@ class FluxCapacitor():
         return kid.get_initiative()
     
     def order_kids(self, kids, host):
-        kids.sort(key = self.take_initiative, reverse = True)
+        kids.sort(key=self.take_initiative, reverse=True)
         return kids
 
     def get_distance(self, kid, host):
-        (x_kid, y_kid) = kid.get_position()
-        (x_host, y_host) = host.get_position()
+        x_kid, y_kid = kid.get_position()
+        x_host, y_host = host.get_position()
         return abs(x_kid - x_host) + abs(y_kid - y_host)
 
     def get_nearest_nonvisited_host(self, kid, visited_hosts):
@@ -117,6 +117,7 @@ class FluxCapacitor():
             if host not in visited_hosts:
                 current_distance = self.get_distance(kid, host)
                 all_distances[host] = current_distance
+
         if len(all_distances) != 0:
             sorted_distances_to_hosts = sorted(all_distances.items(), key = operator.itemgetter(1))
             min_distance = sorted_distances_to_hosts[0][1]
@@ -135,11 +136,10 @@ class FluxCapacitor():
         kid.set_position(host.get_position())
 
     def get_victim(self):
-        self.split_participants()
         kids_that_have_visited_everyone = set()
         hosts_that_have_treated_everyone = set()
 
-        while(len(self.victims) == 0):
+        while len(self.victims) == 0:
             for kid in self._kids:
                 if len(kid.visited_hosts) == len(self._hosts):
                     kids_that_have_visited_everyone.add(kid)
@@ -162,8 +162,5 @@ class FluxCapacitor():
                 break
             if len(kids_that_have_visited_everyone) == len(self._kids) and len(hosts_that_have_treated_everyone) == len(self._hosts):
                 break
-                
-        if len(self.victims) != 0:
-            return self.victims
-        else:
-            return None
+
+        return self.victims or None
