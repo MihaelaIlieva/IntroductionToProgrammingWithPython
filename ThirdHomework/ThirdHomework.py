@@ -167,10 +167,3 @@ class FluxCapacitor():
             return self.victims
         else:
             return None
-        
-candy = Candy(20, 0.3)
-person = Person((1, 2))
-kid = Kid((0, 0), 123)
-host = Host((3, 4), [(1, 1.0), (2, 0.5)])
-flux_capacitor = FluxCapacitor({kid, host})
-print(flux_capacitor.get_victim())
